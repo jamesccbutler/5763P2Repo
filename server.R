@@ -1,23 +1,18 @@
 
 server <- function(input, output, session) { 
   
-  dataset <- reactive({
-    req(input$file1)
-    tryCatch(
-      {
-        df <- read.csv(input$file1$datapath,
-                       header = input$header)
-      },
-      error = function(e) {
-        # return a safeError if a parsing error occurs
-        stop(safeError(e))
-      }
-    )
-    df
+  data <- reactive({
+    inFile <- input$file1
+    if (is.null(inFile)) return(NULL)
+    read.csv(inFile$datapath)
   })
   
-  output$contents <- renderDataTable({
-    dataset()
+  observeEvent(data(), {
+    updateSelectInput(session, "col", choices = names(data()))
+  })
+  
+  output$selected <- renderDataTable({
+    a <- data()[input$col]
   })
   
 }
