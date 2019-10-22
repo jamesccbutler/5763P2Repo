@@ -17,7 +17,14 @@ dashboardPage(
     
     tabItems(
       tabItem( tabName ="part1", 
-               h3("twitter")
+               sidebarLayout(
+                 sidebarPanel(
+                   actionButton("reset", "Refresh twitter")
+                 ),
+                 mainPanel(
+                   DTOutput("twitter")
+                 )
+               )
       ),
       
       tabItem( tabName ="part2", 
@@ -28,7 +35,8 @@ dashboardPage(
                              accept = c("text/csv",
                                         "text/comma-separated-values,text/plain",
                                         ".csv")),
-                   selectInput('col', 'select column', ""),                   tags$hr(),
+                   selectInput('col', 'select column', ""),
+                   tags$hr(),
                    # Input: Checkbox if file has header ----
                    checkboxInput("header", "Header", TRUE),
                    tags$hr()),
